@@ -16,13 +16,32 @@ class App extends Component {
       creating: false,
       currentCustomer: null
     }
-
+    this.startNewCustomer = this.startNewCustomer.bind(this);
+    this.createCustomer = this.createCustomer.bind(this);
   }
   componentDidMount() {
-    getCustomerList().then ( (customerList) => { this.setState({ customerList: customerList})
+    getCustomerList().then ( (customerList) => { 
+      this.setState({ customerList: customerList
+      })});
+  }
 
-      })
-    
+  startNewCustomer() {
+    this.setState({
+      creating: true,
+      initialLoad: false,
+      currentCustomer: null
+    })
+  }
+
+  createCustomer(customer) {
+    postCustomer(customer).then(() => {
+      getCustomerList().then((response) => {
+        this.setState({
+          customerList: response,
+          initialLoad: true,
+          creating: false
+        })});
+    });
   }
 
 
@@ -35,12 +54,14 @@ class App extends Component {
             this.state.customerList ?
             <List
               customerList={this.state.customerList || []}
+              startNewCustomer={this.startNewCustomer}
               />
             : null
           }
           <Workspace initialLoad={this.state.initialLoad}
                     currentCustomer={this.state.currentCustomer}
                     creating={this.state.creating}
+                    createCustomer={this.createCustomer}
                   />
         </div>
       </div>
