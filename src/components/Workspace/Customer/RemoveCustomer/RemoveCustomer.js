@@ -16,6 +16,10 @@ export default class RemoveCustomer extends Component {
     this.setState({ showConfirm: !this.state.showConfirm });
   }
 
+  remove() {
+    return null;
+  }
+
 
   render() {
     return (

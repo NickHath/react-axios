@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import {getCustomerList} from '../customers.js'
-import {postCustomer} from '../customers.js'
+import {getCustomerList, postCustomer, getCustomer, updateCustomer} from '../customers.js'
 import Header from './Header/Header';
 import List from './List/List';
 import Workspace from './Workspace/Workspace';
@@ -18,7 +17,10 @@ class App extends Component {
     }
     this.startNewCustomer = this.startNewCustomer.bind(this);
     this.createCustomer = this.createCustomer.bind(this);
+    this.selectCustomer = this.selectCustomer.bind(this);
+    this.saveEdit = this.saveEdit.bind(this);
   }
+
   componentDidMount() {
     getCustomerList().then ( (customerList) => { 
       this.setState({ customerList: customerList
@@ -44,7 +46,21 @@ class App extends Component {
     });
   }
 
+  selectCustomer(id) {
+    getCustomer(id).then((response) => this.setState({ currentCustomer: response, initialLoad: false }))
+  }
 
+  saveEdit(id, customer) {
+    updateCustomer(id, customer).then(updatedCustomer => {
+      getCustomerList().then(newList => {
+        this.setState({
+          customerList: newList,
+          currentCustomer: updatedCustomer
+        })
+      })
+    })
+  }
+ 
   render() {
     return (
       <div>
@@ -55,6 +71,7 @@ class App extends Component {
             <List
               customerList={this.state.customerList || []}
               startNewCustomer={this.startNewCustomer}
+              selectCustomer={this.selectCustomer}
               />
             : null
           }
