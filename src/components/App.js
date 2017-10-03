@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import {getCustomerList, postCustomer, getCustomer, updateCustomer} from '../customers.js'
+import {getCustomerList, postCustomer, getCustomer, updateCustomer, deleteCustomer} from '../customers.js'
 import Header from './Header/Header';
 import List from './List/List';
 import Workspace from './Workspace/Workspace';
@@ -18,7 +18,7 @@ class App extends Component {
     this.startNewCustomer = this.startNewCustomer.bind(this);
     this.createCustomer = this.createCustomer.bind(this);
     this.selectCustomer = this.selectCustomer.bind(this);
-    this.saveEdit = this.saveEdit.bind(this);
+    this.removeCustomer = this.removeCustomer.bind(this);
   }
 
   componentDidMount() {
@@ -60,6 +60,18 @@ class App extends Component {
       })
     })
   }
+
+  removeCustomer(id) {
+    deleteCustomer(id).then(deletedCustomer => {
+      getCustomerList().then(newList => {
+        this.setState({
+          customerList: newList,
+          currentCustomer: null,
+          initialLoad: true
+        })
+      })
+    })
+  }
  
   render() {
     return (
@@ -79,6 +91,7 @@ class App extends Component {
                     currentCustomer={this.state.currentCustomer}
                     creating={this.state.creating}
                     createCustomer={this.createCustomer}
+                    removeCustomer={this.removeCustomer}
                   />
         </div>
       </div>
