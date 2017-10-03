@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-
+import {getCustomerList} from '../customers.js'
+import {postCustomer} from '../customers.js'
 import Header from './Header/Header';
 import List from './List/List';
 import Workspace from './Workspace/Workspace';
@@ -17,6 +18,13 @@ class App extends Component {
     }
 
   }
+  componentDidMount() {
+    getCustomerList().then ( (customerList) => { this.setState({ customerList: customerList})
+
+      })
+    
+  }
+
 
   render() {
     return (
